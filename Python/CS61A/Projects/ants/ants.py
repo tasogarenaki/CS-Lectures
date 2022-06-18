@@ -28,7 +28,7 @@ class Place:
         "*** YOUR CODE HERE ***"
         if self.exit != None:           # if the Place has an exit,
             exit.entrance = self        # the exit's entrance is set to that Place
-            
+
 
     def add_insect(self, insect):
         """
@@ -177,6 +177,7 @@ class HarvesterAnt(Ant):
 
 
 
+# ------------------------------------- Q3/4 ------------------------------------ #
 class ThrowerAnt(Ant):
     """ThrowerAnt throws a leaf each turn at the nearest Bee in its range."""
 
@@ -185,6 +186,8 @@ class ThrowerAnt(Ant):
     damage = 1
     # ADD/OVERRIDE CLASS ATTRIBUTES HERE
     food_cost = 3                   # Q1
+    min_range = 0                   # Q4: for inherit, only consider one situation
+    max_range = float('inf')        # Q4
 
     def nearest_bee(self, beehive):
         """Return the nearest Bee in a Place that is not the HIVE (beehive), connected to
@@ -193,8 +196,17 @@ class ThrowerAnt(Ant):
         This method returns None if there is no such Bee (or none in range).
         """
         # BEGIN Problem 3 and 4
-        return rANTdom_else_none(self.place.bees) # REPLACE THIS LINE
-        # END Problem 3 and 4
+        # self.place kann not change! 
+        cur_place = self.place          # Q3: Start from the current place 
+        transitions = 0                 # Q4 
+        while cur_place != beehive:     # Q3: while ant is not in hive 
+            if (self.min_range <= transitions <= self.max_range # Q4: only return bee in this range 
+            and cur_place.bees):        # Q3: and if current place has bee
+                return rANTdom_else_none(cur_place.bees)        # Q3: return random bee  
+            cur_place = cur_place.entrance                      # Q3: otherwise search for next place
+            transitions += 1            # Q4
+        return None                     # Q3: if there is no bee to attack
+
 
     def throw_at(self, target):
         """Throw a leaf at the TARGET Bee, reducing its armor."""
@@ -204,6 +216,7 @@ class ThrowerAnt(Ant):
     def action(self, gamestate):
         """Throw a leaf at the nearest Bee in range."""
         self.throw_at(self.nearest_bee(gamestate.beehive))
+
 
 def rANTdom_else_none(s):
     """Return a random element of sequence S, or return None if S is empty."""
@@ -227,8 +240,13 @@ class ShortThrower(ThrowerAnt):
     food_cost = 2
     # OVERRIDE CLASS ATTRIBUTES HERE
     # BEGIN Problem 4
-    implemented = False   # Change to True to view in the GUI
+    implemented = True   # Change to True to view in the GUI
+    max_range = 3        # Q4: 0~3 transitions, only max, then min via inherit 
     # END Problem 4
+
+
+
+
 
 class LongThrower(ThrowerAnt):
     """A ThrowerAnt that only throws leaves at Bees at least 5 places away."""
@@ -237,9 +255,15 @@ class LongThrower(ThrowerAnt):
     food_cost = 2
     # OVERRIDE CLASS ATTRIBUTES HERE
     # BEGIN Problem 4
-    implemented = False   # Change to True to view in the GUI
+    implemented = True   # Change to True to view in the GUI
+    min_range = 5        # Q4: 5~float('inf') transitions
     # END Problem 4
 
+
+
+
+
+# ------------------------------------- Q5 ------------------------------------- #
 class FireAnt(Ant):
     """FireAnt cooks any Bee in its Place when it expires."""
 
