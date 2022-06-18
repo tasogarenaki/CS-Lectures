@@ -8,6 +8,7 @@ from collections import OrderedDict
 # Core Classes #
 ################
 
+# ------------------------------------- Q2 ------------------------------------- #
 class Place:
     """A Place holds insects and has an exit to another Place."""
 
@@ -25,7 +26,9 @@ class Place:
         # Phase 1: Add an entrance to the exit
         # BEGIN Problem 2
         "*** YOUR CODE HERE ***"
-        # END Problem 2
+        if self.exit != None:           # if the Place has an exit,
+            exit.entrance = self        # the exit's entrance is set to that Place
+            
 
     def add_insect(self, insect):
         """
@@ -43,6 +46,10 @@ class Place:
 
     def __str__(self):
         return self.name
+
+
+
+
 
 
 class Insect:
@@ -97,6 +104,10 @@ class Insect:
         return '{0}({1}, {2})'.format(cname, self.armor, self.place)
 
 
+
+
+
+
 class Ant(Insect):
     """An Ant occupies a place and does work for the colony."""
 
@@ -136,12 +147,20 @@ class Ant(Insect):
             place.ant.remove_ant(self)
         Insect.remove_from(self, place)
 
+
+
+
+
+
+# ------------------------------------- Q1 ------------------------------------- #
 class HarvesterAnt(Ant):
     """HarvesterAnt produces 1 additional food per turn for the colony."""
 
     name = 'Harvester'
     implemented = True
     # OVERRIDE CLASS ATTRIBUTES HERE
+    food_cost = 2                   # Q1
+
 
     def action(self, gamestate):
         """Produce 1 additional food for the colony.
@@ -150,7 +169,12 @@ class HarvesterAnt(Ant):
         """
         # BEGIN Problem 1
         "*** YOUR CODE HERE ***"
-        # END Problem 1
+        # Ant adds one food 
+        gamestate.food += 1
+
+
+
+
 
 
 class ThrowerAnt(Ant):
@@ -160,6 +184,7 @@ class ThrowerAnt(Ant):
     implemented = True
     damage = 1
     # ADD/OVERRIDE CLASS ATTRIBUTES HERE
+    food_cost = 3                   # Q1
 
     def nearest_bee(self, beehive):
         """Return the nearest Bee in a Place that is not the HIVE (beehive), connected to
@@ -185,6 +210,11 @@ def rANTdom_else_none(s):
     assert isinstance(s, list), "rANTdom_else_none's argument should be a list but was a %s" % type(s).__name__
     if s:
         return random.choice(s)
+
+
+
+
+
 
 ##############
 # Extensions #
