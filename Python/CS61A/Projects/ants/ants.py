@@ -119,6 +119,7 @@ class Ant(Insect):
     def __init__(self, armor=1):
         """Create an Ant with an ARMOR quantity."""
         Insect.__init__(self, armor)
+        self.buffed = False             # QEC, avoid doubling an ant's damage twice 
 
     def can_contain(self, other):
         return False
@@ -397,26 +398,30 @@ class ScubaThrower(ThrowerAnt):
 
 
 
-
-
-
-
+# ------------------------------------- QEC ------------------------------------ #
 # BEGIN Problem EC
-class QueenAnt(Ant):  # You should change this line
+class QueenAnt(ScubaThrower):  # You should change this line
 # END Problem EC
     """The Queen of the colony. The game is over if a bee enters her place."""
 
     name = 'Queen'
     food_cost = 7
     # OVERRIDE CLASS ATTRIBUTES HERE
+    queen_num = 0        # count the number of queens 
     # BEGIN Problem EC
-    implemented = False   # Change to True to view in the GUI
+    implemented = True   # Change to True to view in the GUI
     # END Problem EC
 
     def __init__(self, armor=1):
         # BEGIN Problem EC
         "*** YOUR CODE HERE ***"
-        # END Problem EC
+        if QueenAnt.queen_num == 0:             # if no queen
+            self.real = True                    # then the first one is true Queen
+        else:
+            self.real = False                   # otherwise are impostor queens
+        QueenAnt.queen_num += 1                 # create a queen
+        ScubaThrower.__init__(self, armor)
+
 
     def action(self, gamestate):
         """A queen ant throws a leaf, but also doubles the damage of ants
@@ -426,7 +431,18 @@ class QueenAnt(Ant):  # You should change this line
         """
         # BEGIN Problem EC
         "*** YOUR CODE HERE ***"
-        # END Problem EC
+        if self.real:                               # if is true queen 
+            ThrowerAnt.action(self, gamestate)      # queen will attact the bee 
+            behind = self.place.exit                # locate the queen's position, all behind should be buffed       
+            while behind:                           # loop til end of the tunnel (None)
+                if (behind.ant != None and          # if there is still an ant
+                not behind.ant.buffed):             # and its not buffed yet
+                    behind.ant.damage *= 2          # buffed it
+                    behind.ant.buffed = True        # marke as buffed 
+                behind = behind.exit                # locate the next ant     
+        else:
+            QueenAnt.reduce_armor(self, self.armor) # if is impostor queen, dies
+
 
     def reduce_armor(self, amount):
         """Reduce armor by AMOUNT, and if the True QueenAnt has no armor
@@ -434,7 +450,18 @@ class QueenAnt(Ant):  # You should change this line
         """
         # BEGIN Problem EC
         "*** YOUR CODE HERE ***"
-        # END Problem EC
+        ScubaThrower.reduce_armor(self, amount)     # Queen gets damaged
+        if self.real and self.armor <= 0:           # if the queen is real and dead
+            bees_win()                              # game over 
+
+
+    # override the Ant.remove_from 
+    def remove_from(self, place):
+        if not self.real:                           # the true queen can not be removed 
+            self.place = None
+            place.ant = None 
+
+
 
 
 
@@ -453,7 +480,7 @@ class Bee(Insect):
     name = 'Bee'
     damage = 1
     # OVERRIDE CLASS ATTRIBUTES HERE
-    is_watersafe = True
+    is_watersafe = True         # Q8
 
     def sting(self, ant):
         """Attack an ANT, reducing its armor by 1."""
