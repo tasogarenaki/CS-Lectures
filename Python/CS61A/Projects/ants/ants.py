@@ -57,6 +57,7 @@ class Insect:
 
     damage = 0
     # ADD CLASS ATTRIBUTES HERE
+    is_watersafe = False        # Q8
 
     def __init__(self, armor, place=None):
         """Create an Insect with an ARMOR amount and a starting PLACE."""
@@ -301,11 +302,7 @@ class FireAnt(Ant):
 
 
 
-
-
-
-
-
+# ------------------------------------- Q6 ------------------------------------- #
 class HungryAnt(Ant):
     """HungryAnt will take three turns to digest a Bee in its place.
     While digesting, the HungryAnt can't eat another Bee.
@@ -313,32 +310,60 @@ class HungryAnt(Ant):
     name = 'Hungry'
     food_cost = 4
     # OVERRIDE CLASS ATTRIBUTES HERE
+    time_to_digest = 3
     # BEGIN Problem 6
-    implemented = False   # Change to True to view in the GUI
+    implemented = True   # Change to True to view in the GUI
     # END Problem 6
 
     def __init__(self, armor=1):
         # BEGIN Problem 6
         "*** YOUR CODE HERE ***"
-        # END Problem 6
+        Ant.__init__(self, armor)       # Create an HungryAnt with an ARMOR quantity
+        self.digesting = 0              # count the number of turns
 
     def eat_bee(self, bee):
         # BEGIN Problem 6
         "*** YOUR CODE HERE ***"
-        # END Problem 6
+        # the action of eating bee
+        if bee == None:                         # if there is no bee, doing nothing
+            return False
+        Insect.reduce_armor(bee, bee.armor)     # if there is a bee, reduce all of it armor
+        return True
 
     def action(self, gamestate):
         # BEGIN Problem 6
         "*** YOUR CODE HERE ***"
-        # END Problem 6
+        # check if it is digesting
+        if self.digesting:              # if digesting != 0, so already started digesting
+            self.digesting -= 1         # count the number of digesting til 0 (3 turns)
+        else:
+            # invoke eat_bee() with to eat a random bee in its place
+            # after eat this bee, the place is empty -> bee == None 
+            eat = HungryAnt.eat_bee(self, rANTdom_else_none(self.place.bees))
+            if eat:                                        # if there was a bee and ate it 
+                self.digesting = self.time_to_digest       # digesting start
 
 
 
+
+
+# ------------------------------------- Q7 ------------------------------------- #
 # BEGIN Problem 7
 # The WallAnt class
-# END Problem 7
+class WallAnt(Ant):
+    name = 'Wall'
+    food_cost = 4
+    # BEGIN Problem 6
+    implemented = True   # Change to True to view in the GUI
+    # the Wall Ant is only there to take attact and doing nothing :/
+    def __init__(self, armor=4):
+        Ant.__init__(self, armor)
 
 
+
+
+
+# ------------------------------------- Q8 ------------------------------------- #
 class Water(Place):
     """Water is a place that can only hold watersafe insects."""
 
@@ -347,11 +372,34 @@ class Water(Place):
         its armor to 0."""
         # BEGIN Problem 8
         "*** YOUR CODE HERE ***"
-        # END Problem 8
+        # All Insects should with is_watersafe as default False -> define in Insect class
+        # All Bees are watersafe -> Bee class with is_watersafe = True 
+        Place.add_insect(self, insect)          # add an inset with Place class
+        if not insect.is_watersafe:             # if an Ant is not watersafe
+            insect.reduce_armor(insect.armor)   # then its dead
 
+
+
+
+
+# ------------------------------------- Q9 ------------------------------------- #
 # BEGIN Problem 9
-# The ScubaThrower class
-# END Problem 9
+# The ScubaThrower class 
+class ScubaThrower(ThrowerAnt):
+    # only override the following:
+    name = 'Scuba'
+    implemented = True
+    food_cost = 6    
+    is_watersafe = True               
+
+
+
+
+
+
+
+
+
 
 # BEGIN Problem EC
 class QueenAnt(Ant):  # You should change this line
@@ -405,7 +453,7 @@ class Bee(Insect):
     name = 'Bee'
     damage = 1
     # OVERRIDE CLASS ATTRIBUTES HERE
-
+    is_watersafe = True
 
     def sting(self, ant):
         """Attack an ANT, reducing its armor by 1."""
