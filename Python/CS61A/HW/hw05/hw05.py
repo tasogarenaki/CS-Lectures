@@ -197,6 +197,38 @@ def is_bst(t):
     False
     """
     "*** YOUR CODE HERE ***"
+    # search for the minimum of the right child (branches)
+    def bst_min(t):
+        if t.is_leaf():
+            return t.label
+        return min(t.label, bst_min(t.branches[0]))
+
+    # search for the maximum of the left child (branches)
+    def bst_max(t):
+        if t.is_leaf():
+            return t.label
+        return max(t.label, bst_max(t.branches[0]))
+
+    if t.is_leaf():             # a leaf is automatically a bst
+        return True
+
+    if len(t.branches) == 1:    # only one child, so can as left or right
+        return True             # which means no rules, automatically a bst
+    
+    # all node's on the left branches are less than or equal to the label (root)
+    # all node's on the right branches are greater than the label (root)
+    # the children (both side) are bst
+    if len(t.branches) == 2:
+        if (bst_max(t.branches[0]) <= t.label < bst_min(t.branches[1]) and 
+        is_bst(t.branches[0]) and is_bst(t.branches[1])):
+                return True
+
+    return False
+    
+
+
+
+
 
 
 def preorder(t):
@@ -210,6 +242,18 @@ def preorder(t):
     [2, 4, 6]
     """
     "*** YOUR CODE HERE ***"
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def path_yielder(t, value):
@@ -253,6 +297,12 @@ def path_yielder(t, value):
         for _______________ in _________________:
 
             "*** YOUR CODE HERE ***"
+
+
+
+
+
+
 
 
 class Link:
