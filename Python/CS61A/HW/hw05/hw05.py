@@ -3,11 +3,11 @@ class VendingMachine:
     """A vending machine that vends some product for some price.
 
     >>> v = VendingMachine('candy', 10)             # init a product with price 
-    >>> v.vend()                                    # a function
+    >>> v.vend()                                    # a method
     'Inventory empty. Restocking required.'
-    >>> v.add_funds(15)                             # a function
+    >>> v.add_funds(15)                             # a method
     'Inventory empty. Restocking required. Here is your $15.'
-    >>> v.restock(2)                                # a function
+    >>> v.restock(2)                                # a method
     'Current candy stock: 2'
     >>> v.vend()
     'You must add $10 more funds.'
@@ -63,7 +63,7 @@ class VendingMachine:
         return 'Current {0} stock: {1}'.format(self.product, self.stock)
 
     def add_funds(self, n):
-        if not self.stock:
+        if not self.stock:                  # if theres no product, return the money
             return  'Inventory empty. Restocking required. Here is your ${0}.'.format(n)
         else:
             self.balance += n
@@ -73,18 +73,7 @@ class VendingMachine:
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+# ------------------------------------ Q2 ------------------------------------ #
 class Mint:
     """A mint creates coins by stamping on years.
 
@@ -121,16 +110,25 @@ class Mint:
 
     def create(self, kind):
         "*** YOUR CODE HERE ***"
+        return kind(self.year)                  # set a typ of mint (kind) with a year
 
     def update(self):
         "*** YOUR CODE HERE ***"
+        self.year = Mint.current_year           # update the current year of Mint 
+
 
 class Coin:
     def __init__(self, year):
-        self.year = year
+        self.year = year                        
 
     def worth(self):
         "*** YOUR CODE HERE ***"
+        age = Mint.current_year - self.year     # calc the age of the mint
+        if age > 50:                            # if age > 50, then the extra value
+            return self.cents + age - 50        
+        else:
+            return self.cents
+
 
 class Nickel(Coin):
     cents = 5
@@ -139,6 +137,10 @@ class Dime(Coin):
     cents = 10
 
 
+
+
+
+# ------------------------------------ Q3 ------------------------------------ #
 def store_digits(n):
     """Stores the digits of a positive number n in a linked list.
 
@@ -155,8 +157,20 @@ def store_digits(n):
     >>> print("Do not use str or reversed!") if any([r in cleaned for r in ["str", "reversed"]]) else None
     """
     "*** YOUR CODE HERE ***"
+    if not n:                   # if n = 0
+        return Link.empty
+    temp = n
+    num = 0
+    while temp // 10 != 0:      
+        temp = temp // 10       # reduce the length of digits
+        num += 1                # count the lengh of the rest digits
+    return Link(temp, store_digits(n % (10**num)))          # go to the next digits
 
 
+
+
+
+# ------------------------------------ Q4 ------------------------------------ #
 def is_bst(t):
     """Returns True if the Tree t has the structure of a valid BST.
 
