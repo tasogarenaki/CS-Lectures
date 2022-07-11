@@ -224,13 +224,12 @@ def is_bst(t):
                 return True
 
     return False
-    
+  
 
 
 
 
-
-
+# ------------------------------------ Q5 ------------------------------------ #
 def preorder(t):
     """Return a list of the entries in this tree in the order that they
     would be visited by a preorder traversal (see problem description).
@@ -242,20 +241,20 @@ def preorder(t):
     [2, 4, 6]
     """
     "*** YOUR CODE HERE ***"
+    lst = []                        # init a list
+    def subfunc(t):
+        lst.append(t.label)         # add the leaf in the list 
+        if not t.is_leaf():         # go deep to get the leaf
+            for b in t.branches:
+                subfunc(b)
+    subfunc(t)                      # invoke the recursion
+    return lst
 
 
 
 
 
-
-
-
-
-
-
-
-
-
+# ------------------------------------ Q6 ------------------------------------ #
 def path_yielder(t, value):
     """Yields all possible paths from the root of t to a node with the label value
     as a list.
@@ -290,16 +289,15 @@ def path_yielder(t, value):
     >>> sorted(list(path_to_2))
     [[0, 2], [0, 2, 1, 2]]
     """
-
     "*** YOUR CODE HERE ***"
+    path = []
+    path.append(t.label)                       
+    if t.label == value:                    # locate the path with expected value      
+        yield path
 
-    for _______________ in _________________:
-        for _______________ in _________________:
-
-            "*** YOUR CODE HERE ***"
-
-
-
+    for b in t.branches:
+        for p in path_yielder(b, value):    # recursion to add the path in the list
+            yield path + p
 
 
 
