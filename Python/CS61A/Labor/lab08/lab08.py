@@ -47,8 +47,17 @@ def every_other(s):
     Link(4)
     """
     "*** YOUR CODE HERE ***"
+    # while s != s.empty and s.rest != empty 
+    # -> if only one element, will not get into the loop
+    while s and s.rest:             
+        s.rest = s.rest.rest        # remove the odd index (0-based)
+        s = s.rest                  # let the rest elements into the loop
 
 
+
+
+
+# -------------------------------------- Q4 -------------------------------------- # 
 def cumulative_mul(t):
     """Mutates t so that each node's label becomes the product of all labels in
     the corresponding subtree rooted at t.
@@ -59,8 +68,17 @@ def cumulative_mul(t):
     Tree(105, [Tree(15, [Tree(5)]), Tree(7)])
     """
     "*** YOUR CODE HERE ***"
+    if t.is_leaf():             # if recursion get the leaf, return nothing
+        return
+    for b in t.branches:        
+        cumulative_mul(b)       # let the branches into the recursion
+        t.label *= b.label      # product of layer by layer 
 
 
+
+
+
+# -------------------------------------- Q5 -------------------------------------- # 
 def has_cycle(link):
     """Return whether link contains a cycle.
 
@@ -76,7 +94,17 @@ def has_cycle(link):
     False
     """
     "*** YOUR CODE HERE ***"
+    # similar as Q2
+    lst = []                # create a list to save the passed link
+    while link:
+        if link in lst:     # if list contains the link, return True         
+            return True
+        lst.append(link)    # save the linked list in the list, thinking about two pointer!
+        link = link.rest    # let the rest of the linked list in the loop
+    return False 
 
+
+# Version 2 with constant space 
 def has_cycle_constant(link):
     """Return whether link contains a cycle.
 
@@ -89,6 +117,31 @@ def has_cycle_constant(link):
     False
     """
     "*** YOUR CODE HERE ***"
+    # two pointers 
+    if not link:                                    # if is empty, return False
+        return False
+
+    slow, fast = link, link.rest                    # define two ponters 
+
+    while fast:                                     # while not empty
+        # if fast is empty, which means no more elements to compair
+        if not fast.rest:                           
+            return False
+        # if both pointers contain each other
+        # which means, fast one catch up the slow one by one more cycle
+        elif fast is slow or fast.rest is slow:     # compair two steps, faster
+            return True
+        else:                                       # let rest elements into loop                                           
+            slow, fast = slow.rest, fast.rest.rest  # let fast one two steps faster, otherwise too slow
+    return False
+
+
+
+
+
+
+
+
 
 
 def reverse_other(t):
