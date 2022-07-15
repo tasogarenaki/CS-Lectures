@@ -139,11 +139,7 @@ def has_cycle_constant(link):
 
 
 
-
-
-
-
-
+# -------------------------------------- Q6 -------------------------------------- # 
 def reverse_other(t):
     """Mutates the tree such that nodes on every other (odd-depth) level
     have the labels of their branches all reversed.
@@ -158,7 +154,25 @@ def reverse_other(t):
     Tree(1, [Tree(8, [Tree(3, [Tree(5), Tree(4)]), Tree(6, [Tree(7)])]), Tree(2)])
     """
     "*** YOUR CODE HERE ***"
+    def subfunc(t, level):
+        if t.is_leaf():                         # if recursion get the leaf, return nothing
+            return
 
+        if level:                               # if it's odd level -> need reversed  
+            temp = []                           # create a temp list to store the labels
+            for b in t.branches:                # add all labels in the temp list,
+                temp.append(b.label)
+            temp.reverse()                      # then reverse it
+
+            for i in range(len(t.branches)):    # save the reversed label for each level 
+                t.branches[i].label = temp[i]   # in opposite position 
+
+        for b in t.branches:                    # recursion for the next level
+            subfunc(b, not level)               
+
+    subfunc(t, False)                           # begin with the first level 0 -> even 
+            
+   
 
 class Link:
     """A linked list.
