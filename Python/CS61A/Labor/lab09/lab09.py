@@ -1,4 +1,4 @@
-# -------------------------------------- Q1 -------------------------------------- #
+# -------------------------------------- Q2 -------------------------------------- #
 def insert_into_all(item, nested_list):
     """Assuming that nested_list is a list of lists, return a new list
     consisting of all the lists in nested_list, but with item added to
@@ -30,7 +30,7 @@ def subseqs(s):
 
 
 
-# -------------------------------------- Q2 -------------------------------------- #
+# -------------------------------------- Q3 -------------------------------------- #
 def inc_subseqs(s):
     """Assuming that S is a list, return a nested list of all subsequences
     of S (a list of lists) for which the elements of the subsequence
@@ -60,7 +60,7 @@ def inc_subseqs(s):
 
 
 
-# -------------------------------------- Q3 -------------------------------------- #
+# -------------------------------------- Q4 -------------------------------------- #
 def num_trees(n):
     """How many full binary trees have exactly n leaves? E.g.,
 
@@ -96,12 +96,7 @@ def num_trees(n):
 
 
 
-
-
-
-
-
-
+# -------------------------------------- Q5 -------------------------------------- #
 def make_generators_generator(g):
     """Generates all the "sub"-generators of the generator returned by
     the generator function g.
@@ -137,17 +132,18 @@ def make_generators_generator(g):
     9
     """
     def gen(i):
-        for ___________ in ___________:
-            if _________________________:
-                _________________________
-            _______________________
-            _______________________
-    __________________________
-    for _________ in __________________:
-        ______________________________
-        ______________________________
+        gene = g()
+        for _ in range(i):
+            yield next(gene)
+
+    for i in range(1, len(list(g())) + 1):
+        yield gen(i) 
 
 
+
+
+
+# -------------------------------------- Q6 -------------------------------------- #
 class Button:
     """
     Represents a single button
@@ -204,6 +200,18 @@ class Keyboard:
         for ________ in ____________________:
             ________________
         ________________
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def make_advanced_counter_maker():
